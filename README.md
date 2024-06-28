@@ -10,7 +10,7 @@ Create a new environment
 
 Install the latest dependencies (preferred)
 
-`pip install Flask-Admin Flask-Bootstrap SQLAlchemy Flask-SQLAlchemy`
+`pip install Flask-Admin Flask-Bootstrap SQLAlchemy Flask-SQLAlchemy python-dotenv WTForms-Components Flask-WTF`
 
 If project does not work for some reason check requirements.txt which are the libraries this project is known to work with.
 

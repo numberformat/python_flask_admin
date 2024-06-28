@@ -2,6 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.sqla.fields import QuerySelectMultipleField
+from flask_admin.form.widgets import Select2Widget
 
 db = SQLAlchemy()
 admin = Admin(name='MyApp', template_mode='bootstrap3')
@@ -15,7 +17,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     posts = db.relationship("Post", back_populates="user")
-    roles = db.relationship('Role', secondary=roles_users, back_populates='users')
+    roles = db.relationship('Role', secondary=roles_users, back_populates='users', lazy='dynamic')
 
     def __str__(self):
         return self.name
@@ -42,11 +44,27 @@ class PostView(ModelView):
 
 class UserView(ModelView):
     form_columns = ["name", "posts", "roles"]
-    column_list = ["name", "roles"]
+    form_extra_fields = {
+        'roles': QuerySelectMultipleField(
+            'Roles',
+            query_factory=lambda: db.session.query(Role).all(),
+            widget=Select2Widget(multiple=True)
+        )
+    }
+
+class RoleView(ModelView):
+    form_columns = ["name", "users"]
+    form_extra_fields = {
+        'users': QuerySelectMultipleField(
+            'Users',
+            query_factory=lambda: db.session.query(User).all(),
+            widget=Select2Widget(multiple=True)
+        )
+    }
 
 admin.add_view(UserView(User, db.session))
 admin.add_view(PostView(Post, db.session))
-admin.add_view(ModelView(Role, db.session))
+admin.add_view(RoleView(Role, db.session))
 
 def create_app():
     app = Flask(__name__)
