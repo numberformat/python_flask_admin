@@ -1,11 +1,10 @@
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 
 from model import User, Post, Role
 from view import UserView, PostView, RoleView
+from shared import db
 
-db = SQLAlchemy()
 admin = Admin(name='MyApp', template_mode='bootstrap3')
 
 admin.add_view(UserView(User, db.session))
@@ -18,7 +17,7 @@ def create_app():
     app.config["SECRET_KEY"] = "mysecret"
     db.init_app(app)
     admin.init_app(app)
-    
+
     @app.route("/")
     def index():
         return render_template("index.html")

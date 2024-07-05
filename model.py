@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from shared import db
 
 # Define the association table for the many-to-many relationship
 roles_users = db.Table('roles_users',
