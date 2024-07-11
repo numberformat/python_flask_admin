@@ -5,14 +5,15 @@ from model import User, Post, Role
 from view import UserView, PostView, RoleView
 from shared import db
 
-admin = Admin(name='MyApp', template_mode='bootstrap3')
+admin = Admin(name='MyApp', template_mode='bootstrap4')
 
-admin.add_view(UserView(User, db.session))
-admin.add_view(PostView(Post, db.session))
-admin.add_view(RoleView(Role, db.session))
+admin.add_view(UserView(User, db.session, 'Users'))
+admin.add_view(PostView(Post, db.session, 'Posts'))
+admin.add_view(RoleView(Role, db.session, 'Roles'))
 
 def create_app():
     app = Flask(__name__)
+
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
     app.config["SECRET_KEY"] = "mysecret"
     db.init_app(app)

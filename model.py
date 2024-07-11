@@ -9,6 +9,7 @@ roles_users = db.Table('roles_users',
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    approved = db.Column(db.Boolean, default=False)
     posts = db.relationship("Post", back_populates="user")
     roles = db.relationship('Role', secondary=roles_users, back_populates='users', lazy='dynamic')
 
