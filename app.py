@@ -5,7 +5,7 @@ from model import User, Post, Role
 from view import UserView, PostView, RoleView
 from shared import db
 
-admin = Admin(name='MyApp', template_mode='bootstrap4')
+admin = Admin(name='Example Admin Application', template_mode='bootstrap4')
 
 admin.add_view(UserView(User, db.session, 'Users'))
 admin.add_view(PostView(Post, db.session, 'Posts'))
