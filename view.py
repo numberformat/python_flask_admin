@@ -86,22 +86,7 @@ class UserView(BaseModelView):
     #admin.add_view(ModelView(Group, db.session, category="Team"))
     #admin.add_view(ModelView(Permission, db.session, category="Team"))
 
-    form_extra_fields = {
-        'groups': QuerySelectMultipleField(
-            'Groups',
-            query_factory=lambda: db.session.query(Group).all(),
-            widget=Select2Widget(multiple=True)
-        )
-    }
-
-
 
 class GroupView(BaseModelView):
     form_columns = ["name", "users"]
-    form_extra_fields = {
-        'users': QuerySelectMultipleField(
-            'Users',
-            query_factory=lambda: db.session.query(User).all(),
-            widget=Select2Widget(multiple=True)
-        )
-    }
+
