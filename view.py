@@ -86,7 +86,17 @@ class UserView(BaseModelView):
     #admin.add_view(ModelView(Group, db.session, category="Team"))
     #admin.add_view(ModelView(Permission, db.session, category="Team"))
 
+    # To change the label on the form:
+    #form_args = {
+    #    'field_name': {
+    #        'label': 'New Label'
+    #    }
+    #}
+
+    # Update labels for list view columns
+    #column_labels = {
+    #    'field_name': 'New Description Label'
+    #}
 
 class GroupView(BaseModelView):
     form_columns = ["name", "users"]
-
