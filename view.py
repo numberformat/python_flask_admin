@@ -3,17 +3,19 @@ from flask_admin.contrib.sqla.fields import QuerySelectMultipleField
 from flask_admin.form.widgets import Select2Widget
 from flask_admin.actions import action
 
-
-from model import Role, User
+from model import Group, User
 from shared import db
 from flask_admin.actions import action
 
-class PostView(ModelView):
+class BaseModelView(ModelView):
+    can_view_details = True  # Enable details view by default
+
+class PostView(BaseModelView):
     can_delete = False
     form_columns = ["title", "body", "user"]
     column_list = ["title", "body", "user"]
 
-class UserView(ModelView):
+class UserView(BaseModelView):
     @action('approve', 'Approve', 'Are you sure you want to approve selected users?')
     def action_approve(self, ids):
         # This is a simple example, in reality you would do something more complex
@@ -33,7 +35,7 @@ class UserView(ModelView):
             user.approved = False
         db.session.commit()
 
-    form_columns = ["name", "posts", "roles"]
+    form_columns = ["name", "posts", "groups"]
     page_size = 2
     #can_delete = False
     #can_create = False
@@ -81,20 +83,20 @@ class UserView(ModelView):
 
     # This will create a top-level menu item named ‘Team’, and a drop-down containing links to the three views.
     #admin.add_view(UserView(User, db.session, category="Team"))
-    #admin.add_view(ModelView(Role, db.session, category="Team"))
+    #admin.add_view(ModelView(Group, db.session, category="Team"))
     #admin.add_view(ModelView(Permission, db.session, category="Team"))
 
     form_extra_fields = {
-        'roles': QuerySelectMultipleField(
-            'Roles',
-            query_factory=lambda: db.session.query(Role).all(),
+        'groups': QuerySelectMultipleField(
+            'Groups',
+            query_factory=lambda: db.session.query(Group).all(),
             widget=Select2Widget(multiple=True)
         )
     }
 
 
 
-class RoleView(ModelView):
+class GroupView(BaseModelView):
     form_columns = ["name", "users"]
     form_extra_fields = {
         'users': QuerySelectMultipleField(

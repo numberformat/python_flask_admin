@@ -2,16 +2,16 @@ from flask_sqlalchemy import SQLAlchemy
 from shared import db
 
 # Define the association table for the many-to-many relationship
-roles_users = db.Table('roles_users',
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-    db.Column('role_id', db.Integer, db.ForeignKey('role.id'), primary_key=True)
+user_group = db.Table('user_group',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('group_id', db.Integer, db.ForeignKey('group.id'))
 )
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(255))
     approved = db.Column(db.Boolean, default=False)
     posts = db.relationship("Post", back_populates="user")
-    roles = db.relationship('Role', secondary=roles_users, back_populates='users', lazy='dynamic')
+    groups = db.relationship('Group', secondary=user_group, back_populates='users')
 
     def __str__(self):
         return self.name
@@ -23,10 +23,10 @@ class Post(db.Model):
     user_id = db.Column(db.ForeignKey("user.id"), nullable=False)
     user = db.relationship("User", back_populates="posts")
 
-class Role(db.Model):
+class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-    users = db.relationship('User', secondary=roles_users, back_populates='roles')
+    name = db.Column(db.String(255), unique=True)
+    users = db.relationship('User', secondary=user_group, back_populates='groups')
 
     def __str__(self):
         return self.name
