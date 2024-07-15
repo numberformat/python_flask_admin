@@ -6,6 +6,11 @@ from model import User, Post, Group
 from view import UserView, PostView, GroupView
 from shared import db, generate_schema
 from adminapi_blueprint import adminapi_blueprint
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
+
+logger = logging.getLogger(__name__)
 
 admin = Admin(name='Example Admin Application', template_mode='bootstrap4')
 
@@ -21,7 +26,6 @@ class MyAdminIndexView(AdminIndexView):
     """
     @expose('/')
     def index(self):
-        generate_schema(db)  # Generate the schema image
         return super(MyAdminIndexView, self).index()
 
 def create_app():
@@ -41,5 +45,9 @@ def create_app():
     # you will need to create a new ProxyPass and ProxyPassReverse rules in your apache configuration
     #     ProxyPass /adminapi http://localhost:5000/adminapi
     #     ProxyPassReverse /adminapi http://localhost:5000/adminapi
+
+    with app.app_context():
+        generate_schema(db=db)
+        print("Schema generated successfully.")
 
     return app

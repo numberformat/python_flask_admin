@@ -1,7 +1,9 @@
-import os
+import os, logging
 from sqlalchemy import MetaData
 from sqlalchemy_schemadisplay import create_schema_graph
 from flask_sqlalchemy import SQLAlchemy
+
+logger = logging.getLogger(__name__)
 
 db = SQLAlchemy()
 
@@ -16,8 +18,10 @@ def generate_schema(db):
         concentrate=False, # Don't try to join the relation lines together
 
     )
-    static_dir = 'static'
-    if not os.path.exists(static_dir):
-        os.makedirs(static_dir)
-        print(f"Directory created at: {os.path.abspath(static_dir)}")
-    graph.write_png('static/schema.png')
+    static_path = os.path.join(os.path.dirname(__file__), 'adminapi', 'static')
+    if not os.path.exists(static_path):
+        os.makedirs(static_path)
+        print(f"Directory created at: {os.path.abspath(static_path)}")
+    schema_file = os.path.join(static_path,'schema.png')
+    logger.info(f"Schema file: {schema_file}")
+    graph.write_png(schema_file)
