@@ -47,6 +47,8 @@ class UserView(BaseModelView):
     #column_exclude_list = ['password', ]
     #column_searchable_list = ['name', 'email']
     #column_default_sort = ('model_job.name', False)
+    # multi column sort
+    #column_default_sort = [['model_job.name', False],['index', False]]
     #column_filters = ['country']
 
     # For a faster editing experience, enable inline editing in the list view:

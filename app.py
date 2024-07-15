@@ -1,5 +1,7 @@
 from flask import Flask, render_template
 from flask_admin import Admin, AdminIndexView, expose
+from flask import Blueprint
+import os.path as op
 
 from model import User, Post, Group
 from view import UserView, PostView, GroupView
@@ -33,5 +35,21 @@ def create_app():
     @app.route("/")
     def index():
         return render_template("index.html")
+
+    # adding static resources
+    # since /admin is already used by Flask-Admin, we need to use a different route to serve the static files
+    # the following code adds an /adminstatic route to serve the static files from the admin blueprint
+    # use "{{ url_for('adminstatic.static', filename='schema.png') }}" to access the schema.png file
+    path = op.join(op.dirname(__file__), 'static')
+
+    admin_blueprint = Blueprint('adminstatic', __name__,
+                            static_folder=path,
+                            static_url_path='/')
+
+    app.register_blueprint(admin_blueprint, url_prefix='/adminstatic')
+    # now files from the static folder can be accessed at /adminstatic
+    # you will need to create a new ProxyPass and ProxyPassReverse rules in your apache configuration
+    #     ProxyPass /adminstatic http://localhost:5000/adminstatic
+    #     ProxyPassReverse /adminstatic http://localhost:5000/adminstatic
 
     return app
